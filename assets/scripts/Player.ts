@@ -8,7 +8,7 @@ export default class Player extends cc.Component {
 
     private rb: cc.RigidBody = null;
 
-    private speed: number = 200;
+    private speed: number = 300;
     private jumpSpeed: number = 1000;
 
     private moveLeft: boolean = false;
@@ -20,7 +20,7 @@ export default class Player extends cc.Component {
 
     onLoad() {
         this.rb = this.getComponent(cc.RigidBody);
-        this.spawnPos - this.node.position.clone();
+        this.spawnPos = this.node.position.clone();
 
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
@@ -46,19 +46,22 @@ export default class Player extends cc.Component {
 
         this.rb.linearVelocity = cc.v2(vx, this.rb.linearVelocity.y);
         
-        if(this.node.y < -500){
+        if(this.node.y < 0){
             this.die();
         }
 
-        this.updateLifeUI();
     }
+    
     updateLifeUI(){
         if(this.LifeLabel){
-            this.LifeLabel.string = "Life:"+this.life;
+            this.LifeLabel.string = "Life: " + this.life;
         }
     }
+    
     die(){
         this.life--;
+        this.updateLifeUI();
+        
         if(this.life > 0){
             this.respawn();
         }else {
