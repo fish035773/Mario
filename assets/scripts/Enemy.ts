@@ -24,7 +24,7 @@ export default class Enemy extends cc.Component {
     onBeginContact(contact, selfCollider, otherCollider) {
         if (this.dead) return;
 
-        if (otherCollider.node.group === "wall" || otherCollider.node.group === "platform") {
+        if (otherCollider.node.group === "Wall" || otherCollider.node.group === "platform") {
             this.turnAround();
             return;
         }
