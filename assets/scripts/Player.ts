@@ -5,9 +5,13 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Player extends cc.Component {
 
+    @property([cc.Node])
+    hearts: cc.Node[] = [];
+    
     @property(cc.Label)
-    LifeLabel: cc.Label = null;
+    scoreLabel: cc.Label = null;
 
+    private currentScore: number = 0;
     private rb: cc.RigidBody = null;
 
     private speed: number = 200;
@@ -63,8 +67,22 @@ export default class Player extends cc.Component {
     }
 
     updateLifeUI() {
-        if (this.LifeLabel && SceneManager.instance) {
-            this.LifeLabel.string = "Life: " + SceneManager.instance.life;
+        if (!SceneManager.instance) return;
+
+        let life = SceneManager.instance.life;
+
+        for (let i = 0; i < this.hearts.length; i++) {
+            this.hearts[i].active = i < life;
+        }
+    }
+
+    public addScore(points: number) {
+        this.currentScore += points;
+        cc.log("吃到金幣！目前分數：" + this.currentScore);
+
+        // 如果你有綁定 UI，就更新畫面上的文字
+        if (this.scoreLabel) {
+            this.scoreLabel.string = "Score: " + this.currentScore;
         }
     }
 
@@ -115,6 +133,7 @@ export default class Player extends cc.Component {
 
         if (SceneManager.instance) {
             SceneManager.instance.playerDie();
+            this.updateLifeUI();
         } else {
             cc.error("SceneManager.instance is null. 請確認 StartMenu 場景有 SceneManager 節點。");
         }
