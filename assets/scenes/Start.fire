@@ -745,6 +745,12 @@
       "__id__": 16
     },
     "_enabled": true,
+    "bgm_level": {
+      "__uuid__": "9fbb6262-9487-4706-8dfc-deb50d98df8a"
+    },
+    "menuBgm": {
+      "__uuid__": "6368c456-2edd-4f5f-b080-e6ae302fae6c"
+    },
     "_id": "f0azPlVJhPpLsaA45zdJbG"
   }
 ]

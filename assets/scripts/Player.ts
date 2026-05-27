@@ -11,6 +11,18 @@ export default class Player extends cc.Component {
     @property(cc.Label)
     scoreLabel: cc.Label = null;
 
+    @property(cc.AudioClip)
+    shrink: cc.AudioClip = null;
+
+    @property(cc.AudioClip)
+    enlarge: cc.AudioClip = null;
+
+    @property(cc.AudioClip)
+    died: cc.AudioClip = null;
+
+    @property(cc.AudioClip)
+    jump: cc.AudioClip = null;
+
     private currentScore: number = 0;
     private rb: cc.RigidBody = null;
 
@@ -86,6 +98,9 @@ export default class Player extends cc.Component {
     public growBig() {
         if (this.isBig) return;
 
+        if(this.enlarge)
+            cc.audioEngine.playEffect(this.enlarge, false);
+
         this.isBig = true;
 
         let facingLeft = this.node.scaleX < 0;
@@ -111,6 +126,9 @@ export default class Player extends cc.Component {
     private shrinkSmall() {
         this.isBig = false;
 
+        if(this.shrink)
+            cc.audioEngine.playEffect(this.shrink, false);
+
         let facingLeft = this.node.scaleX < 0;
 
         this.node.scaleX = facingLeft ? -this.originalScaleX : this.originalScaleX;
@@ -124,6 +142,9 @@ export default class Player extends cc.Component {
 
         this.isDead = true;
 
+        if(this.died)
+            cc.audioEngine.playEffect(this.died, false);
+        
         if (SceneManager.instance) {
             SceneManager.instance.playerDie();
             this.updateLifeUI();
@@ -149,6 +170,9 @@ export default class Player extends cc.Component {
         }
 
         if (event.keyCode === cc.macro.KEY.space && this.canJump) {
+            if(this.jump)
+                cc.audioEngine.playEffect(this.jump, false);
+            
             this.rb.linearVelocity = cc.v2(this.rb.linearVelocity.x, this.jumpSpeed);
             this.canJump = false;
         }

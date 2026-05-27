@@ -1434,6 +1434,18 @@
     "scoreLabel": {
       "__id__": 20
     },
+    "shrink": {
+      "__uuid__": "9d59e2ee-9959-4318-9b92-c53acab57087"
+    },
+    "enlarge": {
+      "__uuid__": "3a977468-e355-455a-87d0-8a58eba43029"
+    },
+    "died": {
+      "__uuid__": "f38b8154-4233-43df-9d50-e698ca900c59"
+    },
+    "jump": {
+      "__uuid__": "e37e6cb9-682b-479a-a655-ccb276f19a53"
+    },
     "_id": "7bsMp/Vl1Paag6mkvnhQzU"
   },
   {
@@ -1954,6 +1966,9 @@
       "__id__": 45
     },
     "_enabled": true,
+    "killed": {
+      "__uuid__": "2c65d2fc-e0fc-43d0-8365-fcdefc1c4dc2"
+    },
     "_id": "92JQhL0v9F27TZSXjlpF7a"
   },
   {
@@ -2143,6 +2158,9 @@
       "__uuid__": "61715ec8-97d3-4e4b-9e10-86117d62a1ef"
     },
     "usedBlockSprite": null,
+    "hitSound": {
+      "__uuid__": "172f03dc-2ecf-4930-ae3d-6fc28d146f4d"
+    },
     "_id": "b4aegNfYxEYpN4EeRMzBuU"
   },
   {
@@ -3778,6 +3796,9 @@
       "__id__": 100
     },
     "_enabled": true,
+    "coinSound": {
+      "__uuid__": "172f03dc-2ecf-4930-ae3d-6fc28d146f4d"
+    },
     "_id": "cfoVVef6pPxaaKPI5E77Dw"
   },
   {
@@ -3953,6 +3974,9 @@
       "__id__": 106
     },
     "_enabled": true,
+    "coinSound": {
+      "__uuid__": "172f03dc-2ecf-4930-ae3d-6fc28d146f4d"
+    },
     "_id": "13a7MKpVNPe4I+ihdXnFeG"
   },
   {
@@ -4128,6 +4152,9 @@
       "__id__": 112
     },
     "_enabled": true,
+    "coinSound": {
+      "__uuid__": "172f03dc-2ecf-4930-ae3d-6fc28d146f4d"
+    },
     "_id": "8avDsXVqJB6YtlWAlfRMTy"
   },
   {
@@ -4303,6 +4330,9 @@
       "__id__": 118
     },
     "_enabled": true,
+    "coinSound": {
+      "__uuid__": "172f03dc-2ecf-4930-ae3d-6fc28d146f4d"
+    },
     "_id": "53+xnckZlHoK/8GIrYCum5"
   },
   {
@@ -4478,6 +4508,9 @@
       "__id__": 124
     },
     "_enabled": true,
+    "coinSound": {
+      "__uuid__": "172f03dc-2ecf-4930-ae3d-6fc28d146f4d"
+    },
     "_id": "b8CAcCMB9M8qHfLEe9wli/"
   },
   {
@@ -4653,6 +4686,9 @@
       "__id__": 130
     },
     "_enabled": true,
+    "coinSound": {
+      "__uuid__": "172f03dc-2ecf-4930-ae3d-6fc28d146f4d"
+    },
     "_id": "3aX7llj4tCU6uXPYOltkEy"
   },
   {
@@ -4830,6 +4866,9 @@
       "__id__": 136
     },
     "_enabled": true,
+    "coinSound": {
+      "__uuid__": "172f03dc-2ecf-4930-ae3d-6fc28d146f4d"
+    },
     "_id": "be9hvjSUpI1bLAKFV9Fwbj"
   },
   {

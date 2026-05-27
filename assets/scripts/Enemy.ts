@@ -3,6 +3,9 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Enemy extends cc.Component {
 
+    @property(cc.AudioClip)
+    killed: cc.AudioClip = null;
+
     private rb: cc.RigidBody = null;
 
     private speed: number = 80;
@@ -79,6 +82,10 @@ export default class Enemy extends cc.Component {
     }
 
     private die() {
+
+        if(this.killed)
+            cc.audioEngine.playEffect(this.killed, false);
+        
         this.dead = true;
 
         this.rb.linearVelocity = cc.v2(0, 0);

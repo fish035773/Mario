@@ -4,9 +4,14 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Coin extends cc.Component {
+    @property({ type: cc.AudioClip })
+    coinSound: cc.AudioClip = null;
 
     onBeginContact(contact, selfCollider, otherCollider) {
         if (otherCollider.node.name === "Player") {
+            if (this.coinSound){
+                cc.audioEngine.playEffect(this.coinSound, false);
+            }
             
             if (SceneManager.instance) {
                 if (this.node.name === "Coin_50") {
