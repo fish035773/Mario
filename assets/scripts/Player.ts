@@ -20,9 +20,19 @@ export default class Player extends cc.Component {
     private spawnPos: cc.Vec3 = null;
     private isDead: boolean = false;
 
+    // 是否已經吃過蘑菇變大
+    private isBig: boolean = false;
+
+    // 記住原本大小，避免翻面時亂掉
+    private originalScaleX: number = 1;
+    private originalScaleY: number = 1;
+
     onLoad() {
         this.rb = this.getComponent(cc.RigidBody);
         this.spawnPos = this.node.position.clone();
+
+        this.originalScaleX = Math.abs(this.node.scaleX);
+        this.originalScaleY = Math.abs(this.node.scaleY);
 
         this.updateLifeUI();
 
@@ -31,6 +41,8 @@ export default class Player extends cc.Component {
     }
 
     update(dt: number) {
+        if (this.isDead) return;
+
         let vx = 0;
 
         if (this.moveLeft) {
@@ -56,6 +68,46 @@ export default class Player extends cc.Component {
         }
     }
 
+    public growBig() {
+        if (this.isBig) return;
+
+        this.isBig = true;
+
+        // 保留目前面向
+        let facingLeft = this.node.scaleX < 0;
+
+        let newScaleX = this.originalScaleX * 1.5;
+        let newScaleY = this.originalScaleY * 1.5;
+
+        this.node.scaleX = facingLeft ? -newScaleX : newScaleX;
+        this.node.scaleY = newScaleY;
+
+        cc.log("Player 吃到蘑菇，變大了！");
+    }
+
+    public hurtPlayer() {
+        if (this.isDead) return;
+
+        // 如果變大狀態碰到敵人，先變回小的，不直接死
+        if (this.isBig) {
+            this.shrinkSmall();
+            return;
+        }
+
+        this.die();
+    }
+
+    private shrinkSmall() {
+        this.isBig = false;
+
+        let facingLeft = this.node.scaleX < 0;
+
+        this.node.scaleX = facingLeft ? -this.originalScaleX : this.originalScaleX;
+        this.node.scaleY = this.originalScaleY;
+
+        cc.log("Player 變回小的！");
+    }
+
     die() {
         if (this.isDead) return;
 
@@ -74,6 +126,8 @@ export default class Player extends cc.Component {
     }
 
     onKeyDown(event: cc.Event.EventKeyboard) {
+        if (this.isDead) return;
+
         if (event.keyCode === cc.macro.KEY.a || event.keyCode === cc.macro.KEY.left) {
             this.moveLeft = true;
         }
@@ -99,12 +153,21 @@ export default class Player extends cc.Component {
     }
 
     onBeginContact(contact, selfCollider, otherCollider) {
-        if (otherCollider.node.name === "Ground") {
-            this.canJump = true;
+        if (this.isDead) return;
+
+        let groundNames = ["Ground", "platform", "Wall", "WallGround"];
+
+        if (groundNames.indexOf(otherCollider.node.name) !== -1) {
+            let normal = contact.getWorldManifold().normal;
+
+            // 玩家踩在物件上方時，才允許跳
+            if (normal.y < 0) {
+                this.canJump = true;
+            }
         }
 
         if (otherCollider.node.name === "Enemy") {
-            this.die();
+            this.hurtPlayer();
         }
     }
 }
