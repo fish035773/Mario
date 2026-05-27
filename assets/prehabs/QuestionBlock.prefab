@@ -46,7 +46,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 16,
-      "height": 14
+      "height": 16
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -57,8 +57,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        326.993,
-        184.591,
+        373.132,
+        247.483,
         0,
         0,
         0,
@@ -173,8 +173,13 @@
       "__id__": 1
     },
     "_enabled": true,
-    "mushroomPrefab": null,
+    "mushroomPrefab": {
+      "__uuid__": "61715ec8-97d3-4e4b-9e10-86117d62a1ef"
+    },
     "usedBlockSprite": null,
+    "hitSound": {
+      "__uuid__": "172f03dc-2ecf-4930-ae3d-6fc28d146f4d"
+    },
     "_id": ""
   },
   {

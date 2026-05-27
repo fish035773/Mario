@@ -28,7 +28,7 @@ export default class Enemy extends cc.Component {
     onBeginContact(contact, selfCollider, otherCollider) {
         if (this.dead) return;
 
-        if (otherCollider.node.name === "Wall") {
+        if (otherCollider.node.name === "Wall" || otherCollider.node.name === "PipeBody") {
             let normal = contact.getWorldManifold().normal;
             if (Math.abs(normal.x) > 0.5) {
                 this.turnAround();
@@ -85,7 +85,7 @@ export default class Enemy extends cc.Component {
 
         if(this.killed)
             cc.audioEngine.playEffect(this.killed, false);
-        
+
         this.dead = true;
 
         this.rb.linearVelocity = cc.v2(0, 0);

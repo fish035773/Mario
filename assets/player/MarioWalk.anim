@@ -3,30 +3,54 @@
   "_name": "MarioWalk",
   "_objFlags": 0,
   "_native": "",
-  "_duration": 0.75,
+  "_duration": 3,
   "sample": 60,
-  "speed": 1,
+  "speed": 2,
   "wrapMode": 2,
   "curveData": {
     "comps": {
       "cc.Sprite": {
         "spriteFrame": [
           {
-            "frame": 0.16666666666666666,
-            "value": {
-              "__uuid__": "a129b770-1472-4b72-87f8-d8f479f4df30"
-            }
-          },
-          {
-            "frame": 0.4166666666666667,
+            "frame": 0.016666666666666666,
             "value": {
               "__uuid__": "f79854e7-2b19-435e-a9c5-ebc22e44cae9"
             }
           },
           {
-            "frame": 0.7333333333333333,
+            "frame": 0.5166666666666667,
+            "value": {
+              "__uuid__": "a129b770-1472-4b72-87f8-d8f479f4df30"
+            }
+          },
+          {
+            "frame": 1.0166666666666666,
             "value": {
               "__uuid__": "9762670b-7641-4c20-943f-3047cdd36dc9"
+            }
+          },
+          {
+            "frame": 1.5,
+            "value": {
+              "__uuid__": "ff6b55aa-02b6-42b2-80c1-f31ac7607953"
+            }
+          },
+          {
+            "frame": 2,
+            "value": {
+              "__uuid__": "9762670b-7641-4c20-943f-3047cdd36dc9"
+            }
+          },
+          {
+            "frame": 2.5,
+            "value": {
+              "__uuid__": "a129b770-1472-4b72-87f8-d8f479f4df30"
+            }
+          },
+          {
+            "frame": 2.9833333333333334,
+            "value": {
+              "__uuid__": "f79854e7-2b19-435e-a9c5-ebc22e44cae9"
             }
           }
         ]

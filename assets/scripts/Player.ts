@@ -25,6 +25,9 @@ export default class Player extends cc.Component {
 
     private currentScore: number = 0;
     private rb: cc.RigidBody = null;
+    
+    private anim: cc.Animation = null;
+    private currentAnim: string = ""; 
 
     private speed: number = 200;
     private jumpSpeed: number = 400;
@@ -43,6 +46,8 @@ export default class Player extends cc.Component {
 
     onLoad() {
         this.rb = this.getComponent(cc.RigidBody);
+        this.anim = this.getComponent(cc.Animation);
+        
         this.spawnPos = this.node.position.clone();
 
         this.originalScaleX = Math.abs(this.node.scaleX);
@@ -70,6 +75,23 @@ export default class Player extends cc.Component {
         }
 
         this.rb.linearVelocity = cc.v2(vx, this.rb.linearVelocity.y);
+
+        if (this.anim) {
+            let nextAnim = this.currentAnim;
+
+            if (!this.canJump) {
+                nextAnim = "MarioJump";
+            } else if (this.moveLeft || this.moveRight) {
+                nextAnim = "MarioWalk";
+            }else {
+                nextAnim = "MarioIdle";
+            }
+
+            if (nextAnim !== this.currentAnim) {
+                this.anim.play(nextAnim);
+                this.currentAnim = nextAnim;
+            }
+        }
 
         if (this.node.y < -500) {
             this.die();
@@ -172,7 +194,7 @@ export default class Player extends cc.Component {
         if (event.keyCode === cc.macro.KEY.space && this.canJump) {
             if(this.jump)
                 cc.audioEngine.playEffect(this.jump, false);
-            
+
             this.rb.linearVelocity = cc.v2(this.rb.linearVelocity.x, this.jumpSpeed);
             this.canJump = false;
         }
@@ -191,7 +213,7 @@ export default class Player extends cc.Component {
     onBeginContact(contact, selfCollider, otherCollider) {
         if (this.isDead) return;
 
-        let groundNames = ["Ground", "PipeHead", "Wall"];
+        let groundNames = ["Ground", "PipeHead", "Wall", "Platform"];
 
         if (groundNames.indexOf(otherCollider.node.name) !== -1) {
             let normal = contact.getWorldManifold().normal;
