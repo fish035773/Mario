@@ -11,8 +11,8 @@ export default class MapCollider extends cc.Component {
         physicsManager.enabled = true;
         physicsManager.gravity = cc.v2(0, -1000);
 
-        physicsManager.debugDrawFlags =
-            cc.PhysicsManager.DrawBits.e_shapeBit;
+        //physicsManager.debugDrawFlags =
+        //    cc.PhysicsManager.DrawBits.e_shapeBit;
 
         let tiledMap = this.getComponent(cc.TiledMap);
 

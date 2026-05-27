@@ -10,8 +10,8 @@ export default class Player extends cc.Component {
 
     private rb: cc.RigidBody = null;
 
-    private speed: number = 300;
-    private jumpSpeed: number = 1000;
+    private speed: number = 200;
+    private jumpSpeed: number = 400;
 
     private moveLeft: boolean = false;
     private moveRight: boolean = false;

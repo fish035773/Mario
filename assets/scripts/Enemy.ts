@@ -8,7 +8,8 @@ export default class Enemy extends cc.Component {
     private speed: number = 80;
     private direction: number = -1;
     private dead: boolean = false;
-
+    private turning: boolean = false;
+    
     onLoad() {
         this.rb = this.getComponent(cc.RigidBody);
     }
@@ -22,9 +23,11 @@ export default class Enemy extends cc.Component {
     }
 
     onBeginContact(contact, selfCollider, otherCollider) {
+        cc.log("敵人撞到了節點，名稱是：", otherCollider.node.name);
+
         if (this.dead) return;
 
-        if (otherCollider.node.group === "Wall" || otherCollider.node.group === "platform") {
+        if (otherCollider.node.name === "Wall") {
             this.turnAround();
             return;
         }
@@ -70,10 +73,18 @@ export default class Enemy extends cc.Component {
     }
 
     private turnAround() {
+        if (this.turning) return;
+
+        this.turning = true;
+
         this.direction *= -1;
 
         // 圖片也一起左右翻轉
         this.node.scaleX = Math.abs(this.node.scaleX) * -this.direction;
+
+        this.scheduleOnce(() => {
+            this.turning = false;
+        }, 0.2);
     }
 
     private die() {
