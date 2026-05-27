@@ -24,10 +24,8 @@ export default class Player extends cc.Component {
     private spawnPos: cc.Vec3 = null;
     private isDead: boolean = false;
 
-    // 是否已經吃過蘑菇變大
     private isBig: boolean = false;
 
-    // 記住原本大小，避免翻面時亂掉
     private originalScaleX: number = 1;
     private originalScaleY: number = 1;
 
@@ -80,7 +78,6 @@ export default class Player extends cc.Component {
         this.currentScore += points;
         cc.log("吃到金幣！目前分數：" + this.currentScore);
 
-        // 如果你有綁定 UI，就更新畫面上的文字
         if (this.scoreLabel) {
             this.scoreLabel.string = "Score: " + this.currentScore;
         }
@@ -91,7 +88,6 @@ export default class Player extends cc.Component {
 
         this.isBig = true;
 
-        // 保留目前面向
         let facingLeft = this.node.scaleX < 0;
 
         let newScaleX = this.originalScaleX * 1.5;
@@ -99,14 +95,11 @@ export default class Player extends cc.Component {
 
         this.node.scaleX = facingLeft ? -newScaleX : newScaleX;
         this.node.scaleY = newScaleY;
-
-        cc.log("Player 吃到蘑菇，變大了！");
     }
 
     public hurtPlayer() {
         if (this.isDead) return;
 
-        // 如果變大狀態碰到敵人，先變回小的，不直接死
         if (this.isBig) {
             this.shrinkSmall();
             return;
@@ -174,19 +167,14 @@ export default class Player extends cc.Component {
     onBeginContact(contact, selfCollider, otherCollider) {
         if (this.isDead) return;
 
-        let groundNames = ["Ground", "platform", "Wall", "WallGround"];
+        let groundNames = ["Ground", "PipeHead", "Wall"];
 
         if (groundNames.indexOf(otherCollider.node.name) !== -1) {
             let normal = contact.getWorldManifold().normal;
 
-            // 玩家踩在物件上方時，才允許跳
             if (normal.y < 0) {
                 this.canJump = true;
             }
-        }
-
-        if (otherCollider.node.name === "Enemy" || otherCollider.node.name === "PipeEnemy") {
-            this.hurtPlayer();
         }
     }
 }

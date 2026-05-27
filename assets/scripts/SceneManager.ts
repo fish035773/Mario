@@ -6,17 +6,20 @@ export default class SceneManager extends cc.Component {
     public static instance: SceneManager = null;
 
     public life: number = 3;
+    public score: number = 0;
     public currentLevel: string = "Game";
 
     onLoad() {
         if (SceneManager.instance === null) {
             SceneManager.instance = this;
             cc.game.addPersistRootNode(this.node);
-            //cc.log("✅ 成功建立常駐節點：" + this.node.name);
         } else {
-            //cc.log("❌ 發現重複的 SceneManager，正在摧毀節點：" + this.node.name); 
             this.node.destroy();
         }
+    }
+
+    public addScore(points: number) {
+        this.score += points;
     }
 
     public loadScene(sceneName: string) {
@@ -25,13 +28,14 @@ export default class SceneManager extends cc.Component {
 
     public startLevel(levelName: string) {
         this.life = 3;
+        this.score = 0; 
         this.currentLevel = levelName;
         cc.director.loadScene(levelName);
     }
 
     public playerDie() {
         this.life--;
-
+        this.score = 0;
         if (this.life > 0) {
             cc.director.loadScene(this.currentLevel);
         } else {
@@ -42,6 +46,7 @@ export default class SceneManager extends cc.Component {
 
     public backToMenu() {
         this.life = 3;
+        this.score = 0;
         cc.director.loadScene("Start");
     }
 }
