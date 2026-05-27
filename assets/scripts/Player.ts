@@ -166,7 +166,7 @@ export default class Player extends cc.Component {
             }
         }
 
-        if (otherCollider.node.name === "Enemy") {
+        if (otherCollider.node.name === "Enemy" || otherCollider.node.name === "PipeEnemy") {
             this.hurtPlayer();
         }
     }
