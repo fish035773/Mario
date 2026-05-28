@@ -1,3 +1,4 @@
+import SceneManager from "./SceneManager";
 declare const firebase: any;
 
 const { ccclass, property } = cc._decorator;
@@ -18,6 +19,11 @@ export default class FirebaseManager extends cc.Component {
     }
 
     private loadFirebaseSDK() {
+        if (!cc.sys.isBrowser) {
+            cc.warn("⚠️ 請在瀏覽器 (Browser) 模式下執行 Firebase！");
+            return;
+        }
+
         let appScript = document.createElement('script');
         appScript.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js";
         document.head.appendChild(appScript);
@@ -26,8 +32,9 @@ export default class FirebaseManager extends cc.Component {
         authScript.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js";
         document.head.appendChild(authScript);
 
+        // ⭐ 這裡已經幫你改成載入 database.js (Realtime Database)
         let dbScript = document.createElement('script');
-        dbScript.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js";
+        dbScript.src = "https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js";
         document.head.appendChild(dbScript);
 
         dbScript.onload = () => {
@@ -51,12 +58,22 @@ export default class FirebaseManager extends cc.Component {
             firebase.initializeApp(firebaseConfig);
             cc.log("🔥 Firebase 初始化成功！");
         }
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                cc.director.emit("AuthStateChanged", user.email);
+            } else {
+                cc.director.emit("AuthStateChanged", null);
+            }
+        });
     }
 
-    public signUp(email: string, pass: string) {
+public signUp(email: string, pass: string) {
         firebase.auth().createUserWithEmailAndPassword(email, pass)
             .then((userCredential) => {
                 cc.log("✅ 註冊成功！歡迎：", userCredential.user.email);
+                // ⭐ 主動廣播，讓畫面瞬間切換！
+                cc.director.emit("AuthStateChanged", userCredential.user.email);
             })
             .catch((error) => {
                 cc.error("❌ 註冊失敗：", error.message);
@@ -67,12 +84,25 @@ export default class FirebaseManager extends cc.Component {
         firebase.auth().signInWithEmailAndPassword(email, pass)
             .then((userCredential) => {
                 cc.log("✅ 登入成功！歡迎回來：", userCredential.user.email);
+                // ⭐ 主動廣播，讓畫面瞬間切換！
+                cc.director.emit("AuthStateChanged", userCredential.user.email);
             })
             .catch((error) => {
                 cc.error("❌ 登入失敗：", error.message);
             });
     }
 
+    public signOut() {
+        firebase.auth().signOut().then(() => {
+            cc.log("👋 已成功登出！");
+            // ⭐ 主動廣播，讓畫面瞬間恢復未登入狀態！
+            cc.director.emit("AuthStateChanged", null);
+        }).catch((error) => {
+            cc.error("❌ 登出失敗：", error);
+        });
+    }
+    
+    // ⭐ 存檔功能已改為 RTDB 語法
     public saveProgress() {
         let user = firebase.auth().currentUser;
         if (!user) {
@@ -81,14 +111,14 @@ export default class FirebaseManager extends cc.Component {
         }
 
         let saveData = {
+            email: user.email, 
             level: SceneManager.instance.currentLevel,
             score: SceneManager.instance.score,
             life: SceneManager.instance.life,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            timestamp: firebase.database.ServerValue.TIMESTAMP
         };
 
-        let db = firebase.firestore();
-        db.collection("users").doc(user.uid).set(saveData)
+        firebase.database().ref('users/' + user.uid).set(saveData)
             .then(() => {
                 cc.log("💾 雲端存檔成功！", saveData);
             })
@@ -97,15 +127,15 @@ export default class FirebaseManager extends cc.Component {
             });
     }
 
+    // ⭐ 讀檔功能已改為 RTDB 語法
     public loadProgress() {
         let user = firebase.auth().currentUser;
         if (!user) return;
 
-        let db = firebase.firestore();
-        db.collection("users").doc(user.uid).get()
-            .then((doc) => {
-                if (doc.exists) {
-                    let data = doc.data();
+        firebase.database().ref('users/' + user.uid).once('value')
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    let data = snapshot.val();
                     cc.log("📂 讀取存檔成功！", data);
                     
                     SceneManager.instance.currentLevel = data.level;
@@ -122,19 +152,23 @@ export default class FirebaseManager extends cc.Component {
             });
     }
 
+    // ⭐ 排行榜功能已改為 RTDB 語法
     public getLeaderboard(callback: (data: any[]) => void) {
-        let db = firebase.firestore();
-        
-        db.collection("users").orderBy("score", "desc").limit(10).get()
-            .then((querySnapshot) => {
+        if (typeof firebase === 'undefined') return;
+
+        firebase.database().ref('users').orderByChild('score').limitToLast(10).once('value')
+            .then((snapshot) => {
                 let leaderboardData = [];
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data();
+                snapshot.forEach((childSnapshot) => {
+                    let data = childSnapshot.val();
                     leaderboardData.push({
                         email: data.email || "Unknown",
                         score: data.score || 0
                     });
                 });
+                
+                // RTDB 取回來是從小到大，這裡反轉陣列讓高分排前面
+                leaderboardData.reverse();
                 
                 if (callback) callback(leaderboardData);
             })

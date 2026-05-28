@@ -1,3 +1,4 @@
+import FirebaseManager from "./FirebaseManager";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -70,6 +71,12 @@ export default class SceneManager extends cc.Component {
                 cc.director.loadScene(this.currentLevel);
             } else {
                 this.life = 3;
+
+                
+                if (FirebaseManager.instance) {
+                    FirebaseManager.instance.saveProgress();
+                }
+
                 this.score = 0; 
                 this.eatenCoins = []; 
                 this.isDying = false;
@@ -83,7 +90,7 @@ export default class SceneManager extends cc.Component {
     public backToMenu() {
         this.life = 3;
         this.score = 0;
-        
+
         if (this.menuBgm)
             cc.audioEngine.playMusic(this.menuBgm, true);
 
